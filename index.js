@@ -14,20 +14,20 @@
 // If the 'b' module also uses this type of boilerplate, then
 // in the browser, it will create a global .b that is used below.
 
-(function (root, factory) {
+(function (global, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['b'], function (b) {
-            return (root.returnExportsGlobal = factory(b));
+        define([], function () {
+            return (global.test = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
         // like Node.
-        module.exports = factory(require('b'));
+        module.exports = factory();
     } else {
         // Browser globals
-        root.returnExportsGlobal = factory(root.b);
+        global.test = factory();
     }
 }(typeof self !== 'undefined' ? self : this, function (b) {
     // Use b in some fashion.
@@ -36,9 +36,21 @@
     // This example returns an object, but the module
     // can return a function as the exported value.
 
-    function myFunc () {
-        console.log("Do Something");
+    // Methods
+    // A private method
+    function notHelloOrGoodbye () {
+    }; 
+    // A public method because it's returned (see below)
+    function hello () {
+        console.log("hello");
+    }; 
+    // A public method because it's returned (see below)
+    function goodbye () {
+        console.log("goodbye");
+    }; 
+    // Exposed public methods
+    return {
+        hello: hello,
+        goodbye: goodbye
     }
-
-    return myFunc;
 }));
